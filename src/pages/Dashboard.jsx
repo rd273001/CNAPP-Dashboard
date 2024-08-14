@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { FaBell, FaClock, FaPlus, FaSearch, FaUserCircle } from 'react-icons/fa';
-import { TbBellRinging } from 'react-icons/tb';
+import { FaClock, FaPlus } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import Header from '../components/Header';
+import Category from '../components/Category';
 
 const Dashboard = () => {
+  const categories = useSelector( state => state.categories.categories );
   const [isModalOpen, setIsModalOpen] = useState( false );
-  const [dateRange, setDateRange] = useState( 'Last 2 days' );
+  const [timeRange, setTimeRange] = useState( 'Last 2 days' );
 
   const handleAddWidget = ( categoryId ) => {
     setSelectedCategoryId( categoryId );
@@ -14,41 +14,48 @@ const Dashboard = () => {
   };
 
   return (
-    <div className='text-black'>
-      {/* Header */ }
-      <header className='bg-white shadow-md'>
-        <Header />
-      </header>
+    <div className='text-black px-4 sm:px-6 lg:px-8'>
 
-      <div className='mx-auto px-4 sm:px-6 lg:px-8 py-2'>
-        <div className='flex justify-between items-center'>
-          <h1 className='sm:text-2xl text-xl font-semibold'>
+      <div className='mx-auto py-4'>
+        <div className='flex justify-between items-center gap-x-4 text-nowrap'>
+          <h1 className='sm:text-2xl text-lg font-semibold'>
             CNAPP Dashboard
           </h1>
-          <div className='flex items-center gap-x-4'>
+          <div className='flex items-center gap-x-4 sm:text-base text-sm sm:overflow-hidden overflow-x-scroll scrollbar-hidden scroll-mr-3'>
             <button
               onClick={ () => setIsSidebarOpen( true ) }
-              className='flex items-center bg-blue-500 text-white px-4 py-1.5 rounded-lg hover:bg-blue-600 transition-colors'
+              className='flex items-center bg-white sm:px-4 px-2 py-1.5 rounded-lg ring-inset ring-2 ring-blue-300 hover:ring-blue-500 active:bg-blue-100'
             >
-              Add Widget<FaPlus className='ml-2' />
+              Add Widget<FaPlus className='sm:ml-2 ml-1 text-gray-500' />
             </button>
             <div className='relative'>
               <select
-                value={ dateRange }
-                onChange={ ( e ) => setDateRange( e.target.value ) }
-                className='bg-white border rounded-lg pl-10 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                value={ timeRange }
+                onChange={ ( e ) => setTimeRange( e.target.value ) }
+                className='bg-white rounded-lg sm:pl-8 pl-6 sm:pr-4 pr-1 py-1.5 outline-none ring-inset ring-2 ring-blue-300 focus:ring-blue-500 active:bg-blue-100'
               >
                 <option>Last 2 days</option>
                 <option>Last week</option>
                 <option>Last month</option>
               </select>
-              <FaClock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' />
+              <FaClock className='absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-500' />
             </div>
           </div>
         </div>
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'></div>
+      <div className='flex flex-col gap-8'>
+        {
+          categories.length > 0
+            ? categories.map( category => (
+              <Category
+                key={ category.id }
+                category={ category }
+              />
+            ) )
+            : <h2 className='mt-6'>No data available!</h2>
+        }
+      </div>
     </div>
   );
 };

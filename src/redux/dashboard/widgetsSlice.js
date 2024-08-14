@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { dashboardData } from './../../../dashboardData';
+import { initialDashboardData } from '../../../dashboardData';
 
 const widgetsSlice = createSlice( {
-  name: 'widgets',
+  name: 'categories',
   initialState: {
-    categories: dashboardData.categroies,
+    categories: initialDashboardData.categroies,
   },
   reducers: {
     // reducers for adding and removing Widget

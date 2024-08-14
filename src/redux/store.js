@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import dashboardReducer from './dashboard/categoriesSlice';
+import widgetsReducer from './dashboard/widgetsSlice';
 
 const store = configureStore( {
   reducer: {
-    dashboard: dashboardReducer,
+    categories: widgetsReducer,
   },
 } );
 
