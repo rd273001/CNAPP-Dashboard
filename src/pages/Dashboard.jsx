@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FaClock, FaPlus } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import Category from '../components/Category';
+import AddWidgetModal from '../components/AddWidgetModal';
+import AddWidgetSidebar from '../components/AddWidgetSidebar';
 
 const Dashboard = () => {
   const categories = useSelector( state => state.categories.categories );
-  const [isModalOpen, setIsModalOpen] = useState( false );
   const [timeRange, setTimeRange] = useState( 'Last 2 days' );
+  const [isModalOpen, setIsModalOpen] = useState( false );
+  const [selectedCategoryId, setSelectedCategoryId] = useState( null );
+  const [isSidebarOpen, setIsSidebarOpen] = useState( false );
 
   const handleAddWidget = ( categoryId ) => {
     setSelectedCategoryId( categoryId );
@@ -18,7 +22,7 @@ const Dashboard = () => {
 
       <div className='mx-auto py-4'>
         <div className='flex justify-between items-center gap-x-4 text-nowrap'>
-          <h1 className='sm:text-2xl text-lg font-semibold'>
+          <h1 className='text-lg sm:text-xl font-bold sm:tracking-normal tracking-tighter'>
             CNAPP Dashboard
           </h1>
           <div className='flex items-center gap-x-4 sm:text-base text-sm sm:overflow-hidden overflow-x-scroll scrollbar-hidden scroll-mr-3'>
@@ -44,18 +48,28 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className='flex flex-col gap-8'>
+      <div className='flex flex-col gap-10 pt-2 pb-8'>
         {
           categories.length > 0
             ? categories.map( category => (
               <Category
                 key={ category.id }
                 category={ category }
+                onAddWidget={ handleAddWidget }
               />
             ) )
-            : <h2 className='mt-6'>No data available!</h2>
+            : <h2 className='mt-6 text-lg font-semibold'>No data available!</h2>
         }
       </div>
+
+      <AddWidgetSidebar isOpen={ isSidebarOpen } onClose={ () => setIsSidebarOpen( false ) } />
+
+      { isModalOpen && (
+        <AddWidgetModal
+          onClose={ () => setIsModalOpen( false ) }
+          categoryId={ selectedCategoryId }
+        />
+      ) }
     </div>
   );
 };

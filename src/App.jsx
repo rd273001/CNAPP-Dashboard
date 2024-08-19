@@ -8,7 +8,7 @@ const App = () => {
 
   return (
     <Provider store={ store }>
-      <div className='min-h-screen bg-slate-200'>
+      <div className='min-h-screen min-w-full bg-slate-200'>
         <header className='bg-white shadow-md'>
         <Header />
         </header>
