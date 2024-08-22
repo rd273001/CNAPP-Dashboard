@@ -21,6 +21,8 @@ You can check the live version of the project here : [CNAPP Dashboard](https://c
 - **Redux Toolkit:** State management library for predictable state updates.
 - **Tailwind CSS:** Utility-first CSS framework for rapid UI development.
 - **React Icons:** Library for easily incorporating popular icons.
+- **chart.js:** Library for builiding charts and graphs.
+- **React Chartjs-2:** Library for creating components for chart.js
 
 ## Setup Instructions
 
