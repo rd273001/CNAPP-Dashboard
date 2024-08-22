@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import Modal from './Modal';
-import { addCustomWidget } from '../redux/dashboard/widgetsSlice';
+import { addWidget } from '../redux/dashboard/widgetsSlice';
+import { toggleAddWidgetModalVisibility } from '../redux/dashboard/modalVisibilitySlice';
 
-const AddWidgetModal = ( { onClose, categoryId } ) => {
+const AddWidgetModal = ( { categoryId } ) => {
   const dispatch = useDispatch();
   const [widgetName, setWidgetName] = useState( '' );
   const [widgetType, setWidgetType] = useState( 'text' );
   const [widgetContent, setWidgetContent] = useState( '' );
 
   const uniqueId = uuid();
+
+  const onClose = () => {
+    dispatch( toggleAddWidgetModalVisibility() );
+  };
 
   const handleSubmit = ( e ) => {
     e.preventDefault();
@@ -29,7 +34,7 @@ const AddWidgetModal = ( { onClose, categoryId } ) => {
         alert( 'Only Text Widget can be added for now!' );
         return;
       }
-      dispatch( addCustomWidget( { categoryId, widget: newWidget } ) );
+      dispatch( addWidget( { categoryId, widget: newWidget } ) );
       onClose();
     }
   };
@@ -63,17 +68,17 @@ const AddWidgetModal = ( { onClose, categoryId } ) => {
           />
         ) }
 
-        <div className='flex justify-end'>
+        <div className='flex justify-end items-center gap-4 mt-6'>
           <button
             type='button'
             onClick={ onClose }
-            className='ring-2 ring-blue-500 bg-gray-300 text-black px-5 py-1.5 rounded mr-5 active:scale-110 hover:opacity-75'
+            className='ring-2 ring-blue-300 hover:bg-blue-500 hover:text-white font-bold py-1 px-4 rounded-md active:scale-110'
           >
             Cancel
           </button>
           <button
             type='submit'
-            className='ring-2 ring-gray-400 bg-blue-600 text-white px-5 py-1.5 rounded active:scale-110 hover:opacity-75'
+            className='ring-2 ring-blue-300 hover:bg-blue-500 hover:text-white font-bold py-1 px-5 rounded-md active:scale-110'
           >
             Add
           </button>

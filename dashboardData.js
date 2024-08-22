@@ -1,5 +1,5 @@
 export const initialDashboardData = {
-  categroies: [
+  categories: [
     {
       id: 'cspm-executive-dashboard',
       name: 'CSPM Executive Dashboard',

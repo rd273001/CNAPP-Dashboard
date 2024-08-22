@@ -5,13 +5,16 @@ import { CgClose } from 'react-icons/cg';
 import lineChartIcon from '../assets/lineChartIcon.svg';
 import HorizontalLineBar from './HorizontalLineBar';
 import Spinner from './Spinner';
-import { removeWidget } from '../redux/dashboard/widgetsSlice';
+import { toggleDeleteWidgetAlertModalVisibility } from '../redux/dashboard/modalVisibilitySlice';
+import { updateCategoryId, updateWidgetId } from '../redux/dashboard/widgetsSlice';
 
-const Widget = ( { widget, categoryId } ) => {
+const Widget = React.memo( ( { widget, categoryId } ) => {
   const dispatch = useDispatch();
 
-  const handleRemoveWidget = () => {
-    dispatch( removeWidget( { categoryId, widgetId: widget.id } ) );
+  const handleWidgetDelete = () => {
+    dispatch( updateCategoryId( categoryId ) );
+    dispatch( updateWidgetId( widget.id ) );
+    dispatch( toggleDeleteWidgetAlertModalVisibility() );
   };
 
   const renderChart = () => {
@@ -25,7 +28,7 @@ const Widget = ( { widget, categoryId } ) => {
       case 'horizontalBar':
         return <HorizontalLineBar widget={ widget } />;
       case 'text':
-        return <p className='flex flex-1 items-center justify-center text-black'>{ widget?.content ? widget.content : 'No Content available!' }</p>;
+        return <p className='flex flex-1 items-center justify-center text-black'>{ widget?.content || 'No Content available!' }</p>;
       default:
         return <p className='flex flex-col flex-1 items-center justify-center text-sm'>
           <img src={ lineChartIcon } className='size-20' />No Graph data available!</p>;
@@ -35,7 +38,7 @@ const Widget = ( { widget, categoryId } ) => {
   return (
     <div className='bg-white flex flex-col min-h-56 w-full p-4 rounded-lg shadow-md relative group'>
       <button
-        onClick={ handleRemoveWidget }
+        onClick={ handleWidgetDelete }
         className='absolute top-1 right-1 text-red-500 hover:text-red-700 hidden focus group-hover:block'
       >
         <CgClose size={ 25 } className='active:scale-125' />
@@ -59,6 +62,6 @@ const Widget = ( { widget, categoryId } ) => {
       </div>
     </div>
   );
-};
+} );
 
 export default Widget;

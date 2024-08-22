@@ -9,14 +9,12 @@ const useClickOutsidePopupClose = ( ref, onClose ) => {
       }
     };
 
-    // event listener for mouse press and touches
+    // event listener for taps/clicks/presses outside the popup area
     document.addEventListener( 'mousedown', handleClickOutside );
-    document.addEventListener( 'touchstart', handleClickOutside );
 
     // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener( 'mousedown', handleClickOutside );
-      document.removeEventListener( 'touchstart', handleClickOutside );
     };
   }, [ref, onClose] );  // Run this effect whenever ref or onClose changes
 };

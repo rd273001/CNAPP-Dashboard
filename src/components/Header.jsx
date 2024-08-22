@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import SearchBar from './SearchBar';
 import { TbBellRinging } from 'react-icons/tb';
 import { FaSearch, FaSearchMinus, FaUserCircle } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { setSearchTerm } from '../redux/dashboard/widgetsSlice';
 
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState( '' );
   const [isSearchVisible, setIsSearchVisible] = useState( false );
+  const searchInputRef = useRef( null );
+  const dispatch = useDispatch();
 
   const toggleSearchVisibility = () => {
     setIsSearchVisible( prev => !prev );
-    setSearchTerm( '' );
+    dispatch( setSearchTerm( '' ) );   // clear search text when SearchBar is closed to unfilter the categories list in Dashboard
+    // Focus the input after the state update and only on small devices
+    if ( !isSearchVisible ) {
+      // ensure that the input is focused reliably after the state update and the component re-renders
+      setTimeout( () => {
+        searchInputRef.current.focus();
+      }, 0 );
+    }
   };
 
   return (
@@ -20,7 +30,7 @@ const Header = () => {
         </a>
         <div className='flex items-center md:gap-x-6 gap-x-4'>
           <div className='sm:block hidden'>
-            <SearchBar searchTerm={ searchTerm } setSearchTerm={ setSearchTerm } />
+            <SearchBar />
           </div>
           { !isSearchVisible
             ? <FaSearch size={ 22 } onClick={ toggleSearchVisibility } className='sm:hidden' />
@@ -35,7 +45,7 @@ const Header = () => {
         </div>
       </div>
       { isSearchVisible && <div className='sm:hidden block mt-2'>
-        <SearchBar searchTerm={ searchTerm } setSearchTerm={ setSearchTerm } />
+        <SearchBar searchInputRef={ searchInputRef } />
       </div> }
     </div>
   );

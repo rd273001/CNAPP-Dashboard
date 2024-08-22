@@ -1,21 +1,36 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { FaClock, FaPlus } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Category from '../components/Category';
 import AddWidgetModal from '../components/AddWidgetModal';
 import AddWidgetSidebar from '../components/AddWidgetSidebar';
+import { toggleAddWidgetModalVisibility, toggleAddWidgetSidebarModalVisibility } from '../redux/dashboard/modalVisibilitySlice';
+import { updateCategoryId } from '../redux/dashboard/widgetsSlice';
+import DeleteWidgetAlert from '../components/DeleteWidgetAlert';
 
 const Dashboard = () => {
-  const categories = useSelector( state => state.categories.categories );
+  const categories = useSelector( state => state.categories );
+  const { categoriesWithSelectedWidgets, currentCategoryId, searchTerm } = categories;
   const [timeRange, setTimeRange] = useState( 'Last 2 days' );
-  const [isModalOpen, setIsModalOpen] = useState( false );
-  const [selectedCategoryId, setSelectedCategoryId] = useState( null );
-  const [isSidebarOpen, setIsSidebarOpen] = useState( false );
+  const modalsVisibility = useSelector( state => state.modalVisibility );
+  const dispatch = useDispatch();
 
   const handleAddWidget = ( categoryId ) => {
-    setSelectedCategoryId( categoryId );
-    setIsModalOpen( true );
+    dispatch( updateCategoryId( categoryId ) );
+    dispatch( toggleAddWidgetModalVisibility() );
   };
+
+  // handler for filtering widgets based on searchTerm
+  const filteredCategories = !searchTerm.trim() || categoriesWithSelectedWidgets.length < 1
+    ? []
+    : categoriesWithSelectedWidgets.map( category => (
+      {
+        ...category,
+        widgets: category.widgets.filter( widget =>
+          widget.name.toLowerCase().includes( searchTerm.trim().toLowerCase() )
+        ),
+      }
+    ) ).filter( category => category.widgets.length > 0 );
 
   return (
     <div className='text-black px-4 sm:px-6 lg:px-8'>
@@ -27,7 +42,7 @@ const Dashboard = () => {
           </h1>
           <div className='flex items-center gap-x-4 sm:text-base text-sm sm:overflow-hidden overflow-x-scroll scrollbar-hidden scroll-mr-3'>
             <button
-              onClick={ () => setIsSidebarOpen( true ) }
+              onClick={ () => dispatch( toggleAddWidgetSidebarModalVisibility() ) }
               className='flex items-center bg-white sm:px-4 px-2 py-1.5 rounded-lg ring-inset ring-2 ring-blue-300 hover:ring-blue-500 active:bg-blue-100'
             >
               Add Widget<FaPlus className='sm:ml-2 ml-1 text-gray-500' />
@@ -50,26 +65,33 @@ const Dashboard = () => {
 
       <div className='flex flex-col gap-10 pt-2 pb-8'>
         {
-          categories.length > 0
-            ? categories.map( category => (
-              <Category
-                key={ category.id }
-                category={ category }
-                onAddWidget={ handleAddWidget }
-              />
-            ) )
-            : <h2 className='mt-6 text-lg font-semibold'>No data available!</h2>
+          searchTerm.trim()
+            ? filteredCategories.length > 0
+              ? filteredCategories.map( category => (
+                <Category
+                  key={ category.id }
+                  category={ category }
+                  onAddWidget={ handleAddWidget }
+                />
+              ) )
+              : <p className='mt-6 sm:text-2xl text-xl'>No match found!</p>
+            : categoriesWithSelectedWidgets.length > 0
+              ? categoriesWithSelectedWidgets.map( category => (
+                <Category
+                  key={ category.id }
+                  category={ category }
+                  onAddWidget={ handleAddWidget }
+                />
+              ) )
+              : <p className='mt-6 sm:text-2xl text-xl'>No data available!</p>
         }
       </div>
 
-      <AddWidgetSidebar isOpen={ isSidebarOpen } onClose={ () => setIsSidebarOpen( false ) } />
+      { modalsVisibility.addWidget && <AddWidgetModal categoryId={ currentCategoryId } /> }
 
-      { isModalOpen && (
-        <AddWidgetModal
-          onClose={ () => setIsModalOpen( false ) }
-          categoryId={ selectedCategoryId }
-        />
-      ) }
+      { modalsVisibility.deleteWidgetAlert && <DeleteWidgetAlert categoryId={ currentCategoryId } /> }
+      { modalsVisibility.addWidgetSidebar && <AddWidgetSidebar isOpen={ modalsVisibility.addWidgetSidebar } /> }
+
     </div>
   );
 };
