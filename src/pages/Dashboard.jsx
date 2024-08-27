@@ -12,7 +12,7 @@ const Dashboard = () => {
   const categories = useSelector( state => state.categories );
   const { categoriesWithSelectedWidgets, currentCategoryId, searchTerm } = categories;
   const [timeRange, setTimeRange] = useState( 'Last 2 days' );
-  const modalsVisibility = useSelector( state => state.modalVisibility );
+  const {addWidget, deleteWidgetAlert, addWidgetSidebar } = useSelector( state => state.modalVisibility );
   const dispatch = useDispatch();
 
   const handleAddWidget = ( categoryId ) => {
@@ -87,10 +87,10 @@ const Dashboard = () => {
         }
       </div>
 
-      { modalsVisibility.addWidget && <AddWidgetModal categoryId={ currentCategoryId } /> }
+      { addWidget && <AddWidgetModal categoryId={ currentCategoryId } /> }
 
-      { modalsVisibility.deleteWidgetAlert && <DeleteWidgetAlert categoryId={ currentCategoryId } /> }
-      { modalsVisibility.addWidgetSidebar && <AddWidgetSidebar isOpen={ modalsVisibility.addWidgetSidebar } /> }
+      { deleteWidgetAlert && <DeleteWidgetAlert categoryId={ currentCategoryId } /> }
+      { addWidgetSidebar && <AddWidgetSidebar isOpen={ addWidgetSidebar } /> }
 
     </div>
   );

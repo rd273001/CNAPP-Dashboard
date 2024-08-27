@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const modalVisibilitySlice = createSlice( {
-  name: 'modalsVisibility',
+  name: 'modalVisibility',
   initialState: {
     addWidget: false,
     addWidgetSidebar: false,
