@@ -43,11 +43,11 @@ const Dashboard = () => {
           <div className='flex items-center gap-x-4 sm:text-base text-sm sm:overflow-hidden overflow-x-scroll scrollbar-hidden scroll-mr-3'>
             <button
               onClick={ () => dispatch( toggleAddWidgetSidebarModalVisibility() ) }
-              className='flex items-center bg-white sm:px-4 px-2 py-1.5 rounded-lg ring-inset ring-2 ring-blue-300 hover:ring-blue-500 active:bg-blue-100'
+              className='flex items-center bg-white sm:px-4 px-2 py-1.5 rounded-lg ring-inset ring-2 ring-blue-300 hover:ring-blue-500 active:scale-95 active:bg-blue-100'
             >
               Add Widget<FaPlus className='sm:ml-2 ml-1 text-gray-500' />
             </button>
-            <div className='relative'>
+            <div className='relative active:scale-95 active:bg-blue-100'>
               <select
                 value={ timeRange }
                 onChange={ ( e ) => setTimeRange( e.target.value ) }
